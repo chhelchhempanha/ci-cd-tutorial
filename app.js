@@ -63,4 +63,34 @@ app.get("/", (req, res, next) => {
   next();
 });
 
+/**
+ * @swagger
+ * /welcome:
+ *   get:
+ *     summary: Returns a welcome JSON message
+ *     tags:
+ *       - Welcome
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved welcome message
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 timestamp:
+ *                   type: string
+ *               example:
+ *                 message: "Welcome to Node.js Express API"
+ *                 timestamp: "2024-01-01T12:00:00Z"
+ */
+app.get("/welcome", (req, res) => {
+  res.json({
+    message: "Welcome to Node.js Express API",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 module.exports = app;
