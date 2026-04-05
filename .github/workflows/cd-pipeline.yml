@@ -71,7 +71,7 @@ jobs:
           --platform "managed" \
           --allow-unauthenticated \
           --tag production \
-          --set-env-vars="PGHOST=${{secrets.PGHOST}},PGDATABASE=${{secrets.PGDATABASE}},PGUSER=${{secrets.PGUSER}},PGPASSWORD=${{secrets.PGPASSWORD}},PGPORT=${{secrets.PGPORT}},PGSSLMODE=require,NODE_ENV=production,PORT=8080"
+          --set-env-vars="PGHOST=${{secrets.PGHOST}},PGDATABASE=${{secrets.PGDATABASE}},PGUSER=${{secrets.PGUSER}},PGPASSWORD=${{secrets.PGPASSWORD}},PGPORT=${{secrets.PGPORT}},PGSSLMODE=require,NODE_ENV=production"
       - name: Deploy to GCP Run - Staging environment
         if: github.ref != 'refs/heads/main'
         run: |
@@ -82,4 +82,4 @@ jobs:
           --platform "managed" \
           --allow-unauthenticated \
           --tag staging \
-          --set-env-vars="PGHOST=${{secrets.PGHOST}},PGDATABASE=${{secrets.PGDATABASE}},PGUSER=${{secrets.PGUSER}},PGPASSWORD=${{secrets.PGPASSWORD}},PGPORT=${{secrets.PGPORT}},PGSSLMODE=require,NODE_ENV=staging,PORT=8080"
+          --set-env-vars="PGHOST=${{secrets.PGHOST}},PGDATABASE=${{secrets.PGDATABASE}},PGUSER=${{secrets.PGUSER}},PGPASSWORD=${{secrets.PGPASSWORD}},PGPORT=${{secrets.PGPORT}},PGSSLMODE=require,NODE_ENV=staging"
