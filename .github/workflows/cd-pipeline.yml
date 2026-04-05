@@ -8,7 +8,7 @@ on:
     types: published
 
 env:
-  PORT: 5001
+  PORT: 8080
   IMAGE: ${{vars.IMAGE}}:${{github.sha}}
 jobs:
   test:
@@ -33,12 +33,12 @@ jobs:
 
       - name: Authenticate for GCP
         id: gcp-auth
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Authenticate for Docker Hub
         id: docker-auth
