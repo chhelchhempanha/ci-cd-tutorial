@@ -1,8 +1,24 @@
 const request = require("supertest");
 const app = require("../app");
 
+// Mock the real productService with mock service
+jest.mock("../src/services/productService", () =>
+  require("../src/services/mockProductService")
+);
+
 describe("Product CRUD API Tests", () => {
   let productId;
+  const mockService = require("../src/services/mockProductService");
+
+  // Clear before all tests run
+  beforeAll(() => {
+    mockService.clear();
+  });
+
+  // Clear before independent test suites
+  beforeEach(() => {
+    // Only clear if productId is not being used (safeguard)
+  });
 
   describe("POST /api/products - Create Product", () => {
     test("Should create a new product successfully", async () => {
