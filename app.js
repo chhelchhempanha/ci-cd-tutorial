@@ -16,6 +16,7 @@ app.get("/", (req, res, next) => {
     <body>
       <!-- <h1>Hello world! I'm a Node/Express Js web server version 2...</h1> -->
       <h1>Hello world! I'm speaking with Mr. Ben!...</h1>
+      <p>This is a simple Node/Express Js web server.</p>
     </body>
     `);
   next();
