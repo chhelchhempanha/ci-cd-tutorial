@@ -1,10 +1,51 @@
 const express = require("express");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
 
 const app = express();
 
+// Swagger Configuration
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Node.js Express API",
+      version: "1.0.0",
+      description: "A simple Node.js/Express web server with Swagger documentation",
+    },
+    servers: [
+      {
+        url: "http://localhost:5000",
+        description: "Development server",
+      },
+    ],
+  },
+  apis: [__filename],
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
 app.use(cors());
 
+// Swagger UI setup
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Returns a welcome message
+ *     tags:
+ *       - Home
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the home page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ */
 app.get("/", (req, res, next) => {
   res.setHeader("Content-type", "text/html");
   res.send(`
@@ -20,6 +61,36 @@ app.get("/", (req, res, next) => {
     </body>
     `);
   next();
+});
+
+/**
+ * @swagger
+ * /welcome:
+ *   get:
+ *     summary: Returns a welcome JSON message
+ *     tags:
+ *       - Welcome
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved welcome message
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 timestamp:
+ *                   type: string
+ *               example:
+ *                 message: "Welcome to Node.js Express API"
+ *                 timestamp: "2024-01-01T12:00:00Z"
+ */
+app.get("/welcome", (req, res) => {
+  res.json({
+    message: "Welcome to Node.js Express API",
+    timestamp: new Date().toISOString(),
+  });
 });
 
 module.exports = app;

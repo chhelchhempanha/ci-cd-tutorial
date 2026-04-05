@@ -8,7 +8,8 @@ RUN npm install -f
 
 COPY . .
 
-# EXPOSE 5001
-EXPOSE 5001
+ENV PORT=8080
+
+EXPOSE 8080
 
 CMD ["npm", "start"]
