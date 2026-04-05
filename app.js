@@ -3,7 +3,13 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 
+const productRoutes = require("./src/routes/productRoutes");
+
 const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(cors());
 
 // Swagger Configuration
 const swaggerOptions = {
@@ -21,7 +27,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: [__filename],
+  apis: [__filename, "./src/controllers/*.js", "./src/routes/*.js"],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -92,5 +98,8 @@ app.get("/welcome", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Product Routes
+app.use("/api/products", productRoutes);
 
 module.exports = app;

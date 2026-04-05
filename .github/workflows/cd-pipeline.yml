@@ -18,6 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
 
@@ -65,14 +71,15 @@ jobs:
           --platform "managed" \
           --allow-unauthenticated \
           --tag production \
+          --set-env-vars="PGHOST=${{secrets.PGHOST}},PGDATABASE=${{secrets.PGDATABASE}},PGUSER=${{secrets.PGUSER}},PGPASSWORD=${{secrets.PGPASSWORD}},PGPORT=${{secrets.PGPORT}},PGSSLMODE=require,NODE_ENV=production,PORT=8080"
       - name: Deploy to GCP Run - Staging environment
         if: github.ref != 'refs/heads/main'
         run: |
           echo "Deploying to staging environment"
-          # Deploy service with to staging environment
           gcloud run deploy ${{vars.GCR_STAGING_PROJECT_NAME}} \
           --region ${{vars.GCR_REGION}} \
           --image ${{env.IMAGE}} \
           --platform "managed" \
           --allow-unauthenticated \
           --tag staging \
+          --set-env-vars="PGHOST=${{secrets.PGHOST}},PGDATABASE=${{secrets.PGDATABASE}},PGUSER=${{secrets.PGUSER}},PGPASSWORD=${{secrets.PGPASSWORD}},PGPORT=${{secrets.PGPORT}},PGSSLMODE=require,NODE_ENV=staging,PORT=8080"
