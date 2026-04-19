@@ -3,7 +3,40 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 
+const productRoutes = require("./src/routes/productRoutes");
+
 const app = express();
+
+// CORS Configuration
+const corsOptions = {
+  // Allow origins with http:// or https:// schemes
+  origin: function (origin, callback) {
+    // List of allowed origins
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "http://localhost:8080",
+      "https://localhost:3000",
+      "https://localhost:8080",
+      "https://gcr-ci-cd-staging-937004112524.us-central1.run.app",
+      process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : []
+    ].flat().filter(Boolean);
+
+    // Allow requests with no origin (mobile apps, curl, postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  maxAge: 3600, // 1 hour
+};
+
+// Middleware
+app.use(express.json());
+app.use(cors(corsOptions));
 
 // Swagger Configuration
 const swaggerOptions = {
@@ -16,17 +49,15 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:5000",
+        url: "http://localhost:8080",
         description: "Development server",
       },
     ],
   },
-  apis: [__filename],
+  apis: [__filename, "./src/controllers/*.js", "./src/routes/*.js"],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-
-app.use(cors());
 
 // Swagger UI setup
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -92,5 +123,8 @@ app.get("/welcome", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Product Routes
+app.use("/api/products", productRoutes);
 
 module.exports = app;
