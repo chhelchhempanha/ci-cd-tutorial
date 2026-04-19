@@ -7,9 +7,36 @@ const productRoutes = require("./src/routes/productRoutes");
 
 const app = express();
 
+// CORS Configuration
+const corsOptions = {
+  // Allow origins with http:// or https:// schemes
+  origin: function (origin, callback) {
+    // List of allowed origins
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "http://localhost:8080",
+      "https://localhost:3000",
+      "https://localhost:8080",
+      "https://gcr-ci-cd-staging-937004112524.us-central1.run.app",
+      process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : []
+    ].flat().filter(Boolean);
+
+    // Allow requests with no origin (mobile apps, curl, postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  maxAge: 3600, // 1 hour
+};
+
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Swagger Configuration
 const swaggerOptions = {
